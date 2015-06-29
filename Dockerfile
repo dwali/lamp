@@ -4,8 +4,19 @@ MAINTAINER Fernando Mayo <fernando@tutum.co>, Feng Honglin <hfeng@tutum.co>
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
-  apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt && \
+  apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt open-sshserver && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# SSH Server configuration
+RUN mkdir /var/run/sshd
+RUN echo 'root:screencast' | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
 
 # Add image configuration and scripts
 ADD start-apache2.sh /start-apache2.sh
@@ -38,5 +49,6 @@ ENV PHP_POST_MAX_SIZE 10M
 # Add volumes for MySQL 
 VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
 
-EXPOSE 80 3306
+EXPOSE 22 80 3306
+CMD ["/usr/sbin/sshd", "-D"]
 CMD ["/run.sh"]
