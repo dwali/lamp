@@ -57,8 +57,5 @@ RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
-# Run sshd
-RUN /usr/sbin/sshd
-
 EXPOSE 22 80 3306
 CMD ["/run.sh"]
