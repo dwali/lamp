@@ -20,22 +20,30 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 
 # Add image configuration and scripts
 ADD start-apache2.sh /start-apache2.sh
+RUN sed -i 's/\r//' /start-apache2.sh
 ADD start-mysqld.sh /start-mysqld.sh
+RUN sed -i 's/\r//' /start-mysqld.sh
 ADD run.sh /run.sh
+RUN sed -i 's/\r//' /run.sh
 RUN chmod 755 /*.sh
 ADD my.cnf /etc/mysql/conf.d/my.cnf
+RUN sed -i 's/\r//' /etc/mysql/conf.d/my.cnf
 ADD supervisord-apache2.conf /etc/supervisor/conf.d/supervisord-apache2.conf
+RUN sed -i 's/\r//' /etc/supervisor/conf.d/supervisord-apache2.conf
 ADD supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
+RUN sed -i 's/\r//' /etc/supervisor/conf.d/supervisord-mysqld.conf
 
 # Remove pre-installed database
 RUN rm -rf /var/lib/mysql/*
 
 # Add MySQL utils
 ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
+RUN sed -i 's/\r//' /create_mysql_admin_user.sh
 RUN chmod 755 /*.sh
 
 # config to enable .htaccess
 ADD apache_default /etc/apache2/sites-available/000-default.conf
+RUN sed -i 's/\r//' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
 # Configure /app folder with sample app
