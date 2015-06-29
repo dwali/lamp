@@ -7,17 +7,6 @@ RUN apt-get update && \
   apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt openssh-server vim nano tmux && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# SSH Server configuration
-RUN mkdir /var/run/sshd
-RUN echo 'root:screencast' | chpasswd
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-
-ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> /etc/profile
-
 # Add image configuration and scripts
 ADD start-apache2.sh /start-apache2.sh
 RUN sed -i 's/\r//' /start-apache2.sh
@@ -56,6 +45,17 @@ ENV PHP_POST_MAX_SIZE 10M
 
 # Add volumes for MySQL 
 VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
+
+# SSH Server configuration
+RUN mkdir /var/run/sshd
+RUN echo 'root:toor' | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
 
 # Run sshd
 RUN /usr/bin/sshd
