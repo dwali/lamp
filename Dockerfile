@@ -57,6 +57,8 @@ ENV PHP_POST_MAX_SIZE 10M
 # Add volumes for MySQL 
 VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
 
+# Run sshd
+RUN /usr/bin/sshd
+
 EXPOSE 22 80 3306
-CMD ["/usr/sbin/sshd"]
 CMD ["/run.sh"]
