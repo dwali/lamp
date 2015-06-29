@@ -4,7 +4,7 @@ MAINTAINER Fernando Mayo <fernando@tutum.co>, Feng Honglin <hfeng@tutum.co>
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
-  apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt openssh-server vim nano && \
+  apt-get -y install supervisor git apache2 libapache2-mod-php5 mysql-server php5-mysql pwgen php-apc php5-mcrypt openssh-server vim nano tmux && \
   echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # SSH Server configuration
@@ -58,5 +58,5 @@ ENV PHP_POST_MAX_SIZE 10M
 VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
 
 EXPOSE 22 80 3306
-CMD ["/usr/sbin/sshd", "-D"]
+CMD ["/usr/sbin/sshd"]
 CMD ["/run.sh"]
