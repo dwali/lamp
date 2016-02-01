@@ -1,6 +1,0 @@
-lamp:
-  image: dwali/lamp
-  ports:
-    - 80:80
-    - 3306:3306
-
