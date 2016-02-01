@@ -1,13 +1,14 @@
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
 
-        DocumentRoot /var/www/html
+        DocumentRoot /var/www
         <Directory />
                 Options FollowSymLinks
-                AllowOverride All
+                AllowOverride None
         </Directory>
-        <Directory /var/www/html>
-                Options Indexes FollowSymLinks MultiViews
+        <Directory /var/www/>
+                Options -Indexes
+                AllowOverride None
                 Order allow,deny
                 allow from all
         </Directory>
@@ -28,9 +29,13 @@
 
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-	#
-	# Set HTTPS environment variable if we came in over secure
-	#  channel.
-	SetEnvIf x-forwarded-proto https HTTPS=on
+    Alias /doc/ "/usr/share/doc/"
+    <Directory "/usr/share/doc/">
+        Options -Indexes -MultiViews +FollowSymLinks
+        AllowOverride None
+        Order deny,allow
+        Deny from all
+        Allow from 127.0.0.0/255.0.0.0 ::1/128
+    </Directory>
 
 </VirtualHost>
